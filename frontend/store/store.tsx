@@ -3,7 +3,7 @@ import { authModalSlice } from "./authModalIndex";
 import { authApi } from "./rtk/authApi/authApi";
 import { authSlice } from "./authIndex";
 import { taskApi } from "./rtk/taskApi/taskApi";
-import { taskSlice } from "./rtk/taskIndex";
+import { taskSlice } from "./taskIndex";
 
 export const store = configureStore({
   reducer: {

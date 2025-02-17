@@ -20,7 +20,7 @@ import { format } from "date-fns";
 import Button from "@/components/ui/button/Button";
 import { useDispatch,useSelector,TypedUseSelectorHook } from "react-redux";
 import { AddDispatch, RootState } from "@/store/store";
-import { RESET_TASK_MSG, UPDATED_TASK } from "@/store/rtk/taskIndex";
+import { RESET_TASK_MSG, UPDATED_TASK } from "@/store/taskIndex";
 
 
 export default function TaskDetailPage() {

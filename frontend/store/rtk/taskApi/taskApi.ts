@@ -56,7 +56,7 @@ export const taskApi = createApi({
         url: "/api/v1/task/create-task",
         method: "POST",
         body: {
-          enteredTitle: taskData.tile,
+          enteredTitle: taskData.title,
           enteredDescription: taskData.description,
           enteredTaskStatus: taskData.status,
           enteredDateWeb: taskData.dueDate,

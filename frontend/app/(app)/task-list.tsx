@@ -160,16 +160,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// import { Text, View } from "react-native";
-// import { useLocalSearchParams } from "expo-router";
 
-// export default function Task(){
-
-//     const { id } = useLocalSearchParams(); // Get dynamic route param
-
-//     return(
-//         <View>
-//             <Text>This is the Task page: {id}</Text>
-//         </View>
-//     )
-// }

@@ -17,11 +17,18 @@ export const createTask = async (req: AuthenticatedRequest, res: Response) => {
     enteredTitle,
     enteredDescription,
     enteredTaskStatus,
-    // enteredDateWeb,
+    enteredDateWeb,
   } = req.body;
-  console.log(enteredTitle, enteredDescription, enteredTaskStatus);
 
-  const enteredDateWeb = new Date();
+
+  console.log(
+    `enteredTitle:${enteredTitle}`,
+    `enteredDescription:${enteredDescription}`,
+    `enteredTaskStatus:${enteredTaskStatus}`,
+    `enteredDateWeb:,${enteredDateWeb}`
+  );
+
+  // const enteredDateWeb = new Date();
   console.log(enteredDateWeb);
 
   if (!enteredTitle || !enteredDescription || !enteredDateWeb) {
@@ -45,7 +52,7 @@ export const createTask = async (req: AuthenticatedRequest, res: Response) => {
       title: enteredTitle,
       description: enteredDescription,
       status: enteredTaskStatus,
-      dateDue: enteredDateWeb,
+      dateDue: new Date(enteredDateWeb),
       user: findUser,
     });
 
@@ -139,8 +146,8 @@ export const updateTask = async (req: AuthenticatedRequest, res: Response) => {
   const taskId = req.params.id;
   const { enteredTitle, enteredDescription, enteredTaskStatus, enteredDate } =
     req.body;
-  
-  console.log("reqBody:",req.body);
+
+  console.log("reqBody:", req.body);
 
   try {
     const taskRepository = AppDataSource.getRepository(TaskEntity);

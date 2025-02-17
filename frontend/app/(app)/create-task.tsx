@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 import Card from "../../components/ui/card/Card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import DatePicker from "react-native-date-picker";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useRouter } from "expo-router";
@@ -16,10 +16,13 @@ import { useRouter } from "expo-router";
 import DatePicker from "react-datepicker"; //web version
 import "react-datepicker/dist/react-datepicker.css"; //web version
 import { TaskData } from "@/interfaces/interface";
-
+import { useCreateTaskMutation } from "@/store/rtk/taskApi/taskApi";
+import { useSelector, useDispatch, TypedUseSelectorHook } from "react-redux";
+import { AddDispatch, RootState } from "@/store/store";
+import { CREATE_TASK, RESET_TASK_MSG } from "@/store/taskIndex";
+import Button from "@/components/ui/button/Button";
 
 export default function CreateTaskComponent() {
-
   const router = useRouter();
   const platform = Platform;
 
@@ -27,36 +30,50 @@ export default function CreateTaskComponent() {
   const [enteredDescription, setEnteredDescription] = useState("");
   const [enteredTaskStatus, setEnteredTaskStatus] = useState(false);
   // const [enteredDateMobile, setEnteredDateMobile] = useState<Date>(new Date());
+  // const [open, setOpen] = useState(false);
 
-  const [enteredDateWeb,setEnteredDateWeb] = useState<Date|null>(null);
-  const [open, setOpen] = useState(false);
+  const [enteredDateWeb, setEnteredDateWeb] = useState<Date | null>(null);
 
-  const onSubmit =()=>{
+  const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
+  const { message } = useTypedSelector((state) => state.task);
 
-    if(enteredTitle.trim().length===0 || enteredDescription.trim().length===0 || enteredDateWeb===null){
+  const dispatch = useDispatch<AddDispatch>();
+
+  const [createTask] = useCreateTaskMutation();
+
+  const onSubmit = async () => {
+    if (
+      enteredTitle.trim().length === 0 ||
+      enteredDescription.trim().length === 0 ||
+      enteredDateWeb === null
+    ) {
       console.log("please fill in your tasks...");
-      return
+      return;
+    }
+
+    const taskData: TaskData = {
+      title: enteredTitle,
+      description: enteredDescription,
+      status: enteredTaskStatus,
+      dueDate: enteredDateWeb,
     };
 
-    const taskData:TaskData = {
-      title:enteredTitle,
-      description:enteredDescription,
-      status:enteredTaskStatus,
-      dueDate:enteredDateWeb
-    };
+    const response = await createTask({ taskData }).unwrap();
+    console.log("response from backend:", response);
+    dispatch(CREATE_TASK(response))
+  };
 
-    
-
-  }   
-    
-
-
+  useEffect(() => {
+    if (message === "new task created") {
+      router.push("/(app)/task-list");
+      dispatch(RESET_TASK_MSG());
+    }
+  }, [message]);
 
   return (
     <Card style={styles.cardClass}>
-      
       <View>
-        <Pressable onPress={()=>router.push("/(app)/home")}>
+        <Pressable onPress={() => router.push("/(app)/home")}>
           <Text>
             <FontAwesome name="arrow-left" size={24} color="black" />
           </Text>
@@ -100,30 +117,33 @@ export default function CreateTaskComponent() {
         {/*👇👇👇 ==================Date=====================👇👇👇 */}
         <View style={styles.textInputContainer}>
           <Text>date:</Text>
-          {platform.OS==="web"?(
-              <DatePicker
+          {platform.OS === "web" ? (
+            <DatePicker
               selected={enteredDateWeb}
               placeholderText="pick your date here"
               // value={enteredDate}
               onChange={(date: Date | null) => setEnteredDateWeb(date)}
               //onChange={(date) =>setEnteredDate(date)}
             />
-          ):(
+          ) : (
             // 📒📒This is for mobile, will change to this after the server and database has been hosted online📒📒
-          //   <DatePicker
-          //   modal
-          //   open={open}
-          //   date={enteredDateMobile}
-          //   mode={"date"}
-          //   onConfirm={(date) => {
-          //     setOpen(false);
-          //     setEnteredDateMobile(date);
-          //   }}
-          //   onCancel={() => setOpen(false)}
-          // />
-          <Text>{null}</Text>
+            //   <DatePicker
+            //   modal
+            //   open={open}
+            //   date={enteredDateMobile}
+            //   mode={"date"}
+            //   onConfirm={(date) => {
+            //     setOpen(false);
+            //     setEnteredDateMobile(date);
+            //   }}
+            //   onCancel={() => setOpen(false)}
+            // />
+            <Text>{null}</Text>
           )}
-          
+        </View>
+
+        <View>
+          <Button type="submit" submitHandler={onSubmit} title="Create Task" />
         </View>
       </View>
     </Card>
@@ -165,4 +185,4 @@ const styles = StyleSheet.create({
     padding: 6,
     outlineColor: "none",
   },
-})
+});
