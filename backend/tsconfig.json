@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS", // Ensures compatibility with Node.js
+    "lib": ["ES2020"],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "experimentalDecorators": true, //Enables decorators (required for TypeORM).
+    "emitDecoratorMetadata": true,  //Allows TypeScript to generate metadata for decorators.
+
+    "strictPropertyInitialization": false,//Prevents TypeScript from throwing errors for uninitialized properties.
+    
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  }
+}
